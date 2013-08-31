@@ -1,0 +1,496 @@
+<!--
+CampusHash Course Demos - Slides
+
+Inspired by Google I/o 2013 Templates
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CampusHash - Course Demo</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="all" href="theme/css/font-awesome.css">
+  <link rel="stylesheet" media="all" href="theme/css/app.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+<slide class="title-slide segue nobackground">
+  <aside class="gdbar"><img src="images/campushash_icon_128.png"></aside>
+  <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+  <hgroup class="auto-fadein">
+    <h1 data-config-title><!-- populated from slide_config.json --></h1>
+    <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+    <p data-config-presenter><!-- populated from slide_config.json --></p>
+  </hgroup>
+</slide>
+
+
+<slide class="nobackground" >
+  
+  
+    <hgroup>
+      <h2></h2>
+      <h3></h3>
+    </hgroup>
+    <article class="flexbox vcenter centered"><h1 style="font-size: 170%">Your awesome Python module is ready!</h1>
+
+<p><br>
+<h1 style="font-size: 200%" class="blue">What now?</h1>
+<img src="images/determined-questioning-pondering.svg" style="height: 100%; width: 100%"></p></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+  
+    <hgroup>
+      <h2>Let's go to the Cheese Shop!</h2>
+      <h3></h3>
+    </hgroup>
+    <article class="flexbox vcenter centered"><p><img src="images/cheeseshop.svg" style="height: 100%; width: 100%">
+No, really!</p>
+<footer class="source">PyPI == Cheese Shop ;)</footer></article>
+ 
+</slide>
+
+<slide class="big" >
+  
+  
+    <hgroup>
+      <h2>Agenda (duh!)</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><p>At the end of the talk, you can expect that your package:</p>
+<ul>
+<li>Can be easily installable with <span class="red">pip</span> or <span class="red">easy_install</span></li>
+<li>Can be specified as a dependency for another package</li>
+<li>Will have proper tests included*</li>
+<li>Will have proper documentation*</li>
+<li>Will make the world a better place!**</li>
+</ul>
+<p>*Well, not really.</p>
+<p>**Guaranteed, or get your money back.</p></article>
+ 
+</slide>
+
+<slide class="bog" >
+  
+  
+    <hgroup>
+      <h2>Laying out your package</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><pre data-lang="layout">
+MoonGrabber
+|- bin/
+|- CHANGES.txt
+|- docs/
+|- LICENSE.txt
+|- MANIFEST.in
+|- README.rst
+|- setup.py
+|- moongrabber/
+    |- __init__.py
+    |- moongun.py
+    |- battery.py
+    |- test/
+        |- __init__.py
+        |- test_moongun.py
+        |- test_fuel.py
+</pre></article>
+ 
+</slide>
+
+<slide class="big" >
+  
+  
+    <hgroup>
+      <h2>Breaking it up</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><ul>
+<li><span class="red">bin</span> contains any scripts which use MoonGrabber that could be useful for the user.</li>
+<li><span class="blue">CHANGES.txt</span> lists the changes to your module in successive versions.</li>
+</ul>
+<pre data-lang="CHANGES.txt">
+v&lt;version&gt;, &lt;date&gt; -- Initial release.
+</pre>
+
+<ul>
+<li><span class="red">docs</span> contains the documentation for your package should you choose to write some. And you should always do so.</li>
+<li>In <span class="blue">LICENSE.txt</span>, just paste your favorite license.</li>
+<li><span class="blue">MANIFEST.in</span> specifies the extra files that you might want to include in your package.</li>
+</ul>
+<pre data-lang="MANIFEST.in">
+include *.txt
+include *.json
+recursive-include docs *.txt
+</pre></article>
+ 
+</slide>
+
+<slide class="big" >
+  
+  
+    <hgroup>
+      <h2>Breaking it up</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><ul>
+<li>The <span class="blue">README.txt</span> file should be written in <span class="green">reStructuredText</span>, so that PyPI can use it to generate the package's PyPI page.</li>
+</ul>
+<pre data-lang="README.rst">
+===========
+Moon Grabber
+===========
+
+Moon Grabber is a super-awesome module which lets you steal the Moon.
+But promise to put it back.You can use it like this::
+
+    #!/usr/bin/env python
+
+    from moongrabber import battery, moongun
+
+    if battery.is_full():
+        moon = moongun.grab_moon(planet="Earth")
+</pre></article>
+ 
+</slide>
+
+<slide class="big" >
+  
+  
+    <hgroup>
+      <h2>Writing your <span class="blue">setup.py</span></h2>
+      <h3></h3>
+    </hgroup>
+    <article ><pre class="prettyprint" data-lang="setup.py">
+from distutils.core import setup
+
+setup(
+    name='MoonGrabber',
+    version='0.4.2',
+    author='Dr. Nefario',
+    author_email='nef@grulabs.com',
+    packages=['moongrabber', 'moongrabber.test'],
+    scripts=['bin/clean-gun.py','bin/recharge-battery.py'],
+    url='http://pypi.python.org/pypi/MoonGrabber/',
+    license='LICENSE.txt',
+    description='Steal the Moon from your favorite planet.',
+    long_description=open('README.rst').read(),
+    install_requires=[
+        "Django >= 1.1.1"
+    ],
+)
+</pre></article>
+ 
+</slide>
+
+<slide class="big" >
+  
+  
+    <hgroup>
+      <h2>Creating a source distribution</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><ul>
+<li>The <span class="green">sdist</span> command creates a source distribution of your package.</li>
+</ul>
+<pre class="prettyprint" data-lang="SHELL">
+$ python setup.py sdist
+</pre>
+
+<ul>
+<li>
+<p>It creates a <span class="blue">MANIFEST</span> file, a <span class="red">dist</span> directory in your project folder.</p>
+<ul>
+<li>This directory contains your archived distribution file. In this case, it is <span class="black">MoonGrabber-0.4.2.tar.gz</span>.</li>
+</ul>
+</li>
+</ul></article>
+ 
+</slide>
+
+<slide class="big" >
+  
+  
+    <hgroup>
+      <h2>The Cheese Shop!</h2>
+      <h3>Register yourself with PyPI</h3>
+    </hgroup>
+    <article ><pre class="prettyprint" data-lang="SHELL">
+$ python setup.py register
+</pre>
+
+<ul>
+<li>
+<p>If you're already registered as a user on PyPI, this will register your package.</p>
+</li>
+<li>
+<p>If not, follow the instructions and the console and regsiter yourself. Then run the command again to register the package.</p>
+</li>
+</ul>
+<pre class="prettyprint" data-lang="SHELL">
+$ python setup.py sdist upload
+</pre>
+
+<ul>
+<li>
+<p>This will re-build the source distribution and upload it to PyPI.</p>
+<ul>
+<li>Whenever you want to update the package, you can use this command.</li>
+</ul>
+</li>
+</ul></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+  
+    <hgroup>
+      <h2></h2>
+      <h3></h3>
+    </hgroup>
+    <article class="flexbox vcenter centered"><h1 style="font-size: 250%" class="red">And...you're done! Yay!</h1></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+  
+    <hgroup>
+      <h2></h2>
+      <h3></h3>
+    </hgroup>
+    <article class="flexbox vcenter centered"><h1 style="font-size: 200%" class="blue">But there's more...</h1>
+
+<p><br>
+<h2 style="font-size: 150%">Let's dig deeper</h2></p></article>
+ 
+</slide>
+
+<slide class="big" >
+  
+  
+    <hgroup>
+      <h2>Add some <span class="blue">classifiers</span></h2>
+      <h3></h3>
+    </hgroup>
+    <article ><ul>
+<li>
+<p>Classifiers are used to additional metadata to your package.</p>
+</li>
+<li>
+<p>The <span class='black'>classifiers</span> argument in the <span class="black">setup()</span> function takes a list of classifier strings.</p>
+</li>
+<li>
+<p>The list of strings can be found at<br><a href="http://pypi.python.org/pypi?%3Aaction=list_classifiers">pypi.python.org/pypi?%3Aaction=list_classifiers</a>.</p>
+</li>
+</ul></article>
+ 
+</slide>
+
+<slide class="big" >
+  
+  
+    <hgroup>
+      <h2>More with modules</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><pre class="prettyprint" data-lang="setup()">
+packages_dir = { '' : 'foo', 'bar' : 'boo'   }
+</pre>
+
+<ul>
+<li>Use it when you source folder layout is different from your package layout.</li>
+</ul>
+<pre class="prettyprint" data-lang="setup()">
+py_modules = ['foo', 'bar.zoo']
+</pre>
+
+<ul>
+<li>Use it to include individual modules.</li>
+</ul></article>
+ 
+</slide>
+
+<slide class="big" >
+  
+  
+    <hgroup>
+      <h2>Extension modules</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><pre class="prettyprint" data-lang="setup()">
+ext_package='pkg'
+</pre>
+
+<ul>
+<li>Use it to list extension packages.</li>
+</ul>
+<pre class="prettyprint" data-lang="setup()">
+ext_modules=[
+    Extension('foo', 
+        ['foo.c']
+    )
+]
+</pre>
+
+<ul>
+<li>Use it to add extension modules, if you may.</li>
+</ul>
+<pre class="prettyprint" data-lang="setup()">
+library_dirs=['/usr/X11R6/lib'],
+libraries=['X11', 'Xt']
+</pre>
+
+<ul>
+<li>Use it to include external libraries.</li>
+</ul></article>
+ 
+</slide>
+
+<slide class="big" >
+  
+  
+    <hgroup>
+      <h2>Adding more data</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><pre class="prettyprint" data-lang="setup()">
+package_data={'mypkg': ['data/*.dat']}
+</pre>
+
+<ul>
+<li>You can include data which is critical to your package.</li>
+</ul>
+<pre class="prettyprint" data-lang="setup()">
+data_files=[('bitmaps', ['bm/b1.gif', 'bm/b2.gif']),
+                  ('config', ['cfg/data.cfg']),
+                  ('/etc/init.d', ['init-script'])]
+     )
+</pre>
+
+<ul>
+<li>You can add external data files too.</li>
+</ul></article>
+ 
+</slide>
+
+<slide class="big" >
+  
+  
+    <hgroup>
+      <h2>Creating built distributions</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><pre class="prettyprint" data-lang="SHELL">
+$ python setup.py bdist
+</pre>
+
+<ul>
+<li>This would create an archived built distribution. This is a dumb build.</li>
+</ul>
+<pre class="prettyprint" data-lang="SHELL">
+$ python setup.py bdist_rpm
+$ python setup.py bdist_wininst
+$ python setup.py bdist_msi
+</pre>
+
+<ul>
+<li>You can build these binaries on the respective platforms.</li>
+</ul></article>
+ 
+</slide>
+
+<slide class="big" >
+  
+  
+    <hgroup>
+      <h2>Do a <span class="blue">setup.cfg</span></h2>
+      <h3>Because doing setup() is too mainstream ;)</h3>
+    </hgroup>
+    <article ><pre class="prettyprint" data-lang="Setup.cfg">
+[bdist_rpm]
+release = 1
+packager = Greg Ward <gward@python.net>
+doc_files = CHANGES.txt
+            README.txt
+            USAGE.txt
+            doc/
+            examples/
+
+[build_ext]
+inplace=1
+</pre>
+
+<ul>
+<li>Use this when you cannot have everything predefined. Users can edit this file to customize their installation.</li>
+</ul></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+  
+    <hgroup>
+      <h2>I love questions! LOL JK.</h2>
+      <h3></h3>
+    </hgroup>
+    <article class="flexbox vcenter centered"><p><img src="images/questions.jpg" style="height: 100%; width: 100%"></p>
+<footer class="source">PyPI == Cheese Shop ;)</footer></article>
+ 
+</slide>
+
+
+<slide class="thank-you-slide segue nobackground">
+  <aside class="gdbar right"><img src="images/campushash_icon_128.png"></aside>
+  <article class="flexbox vleft auto-fadein">
+    <h2>Thank You!</h2>
+    <p>You have been a great audience!</p>
+  </article>
+  <p class="auto-fadein" data-config-contact>
+    <!-- populated from slide_config.json -->
+  </p>
+</slide>
+
+<!-- <slide class="logoslide dark nobackground">
+  <article class="flexbox vcenter">
+    <span><img src="images/google_developers_logo_white.png"></span>
+  </article>
+</slide> -->
+
+<slide class="backdrop"></slide>
+
+</slides>
+
+<script>
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-XXXXXXXX-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>
